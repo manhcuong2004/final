@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Scraper</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style rel="stylesheet" href="style.css">
+        #output {
+            white-space: pre-wrap;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ccc;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Web Scraper</h1>
+        <form id="scrapeForm">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="url">URL:</label>
+                <input type="url" id="url" name="url" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Bắt đầu cào</button>
+            </div>
+        </form>
+        <h2>Output:</h2>
+        <div class="output-box" id="output"></div>
+    </div>
+
+    <script>
+        document.getElementById('scrapeForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+
+            const username = formData.get('username');
+            const password = formData.get('password');
+            const url = formData.get('url');
+
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = 'Starting scraping...\n';
+
+            // Sử dụng EventSource để nhận dữ liệu SSE
+            const eventSource = new EventSource(`/scrape?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&url=${encodeURIComponent(url)}`);
+
+            eventSource.onmessage = (event) => {
+                outputDiv.innerHTML += event.data + '\n';
+                outputDiv.scrollTop = outputDiv.scrollHeight; // Cuộn xuống cuối
+            };
+
+            eventSource.onerror = () => {
+                outputDiv.innerHTML += 'An error occurred.\n';
+                eventSource.close();
+            };
+        });
+    </script>
+</body>
+</html>

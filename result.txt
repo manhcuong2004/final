@@ -1,0 +1,55 @@
+Error: Traceback (most recent call last):
+  File "f:\HocTap\Nam3ki1\kpw\final\sa.py", line 410, in extractComment
+    post = layer.find_element(By.CSS_SELECTOR, 'div[role="dialog"]')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\selenium\webdriver\remote\webelement.py", line 417, in find_element
+    return self._execute(Command.FIND_CHILD_ELEMENT, {"using": by, "value": value})["value"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\selenium\webdriver\remote\webelement.py", line 395, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\selenium\webdriver\remote\webdriver.py", line 354, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\selenium\webdriver\remote\errorhandler.py", line 229, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"div[role="dialog"]"}
+  (Session info: MicrosoftEdge=131.0.2903.86); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+Stacktrace:
+	(No symbol) [0x00007FF7E21D6B05]
+	Microsoft::Applications::Events::EventProperty::empty [0x00007FF7E24FF474+1437348]
+	sqlite3_dbdata_init [0x00007FF7E25A2DA6+643174]
+	(No symbol) [0x00007FF7E20FC9DB]
+	(No symbol) [0x00007FF7E20FCAE3]
+	(No symbol) [0x00007FF7E20F348C]
+	(No symbol) [0x00007FF7E211C1DF]
+	(No symbol) [0x00007FF7E20F3437]
+	(No symbol) [0x00007FF7E20F32FD]
+	(No symbol) [0x00007FF7E211C480]
+	(No symbol) [0x00007FF7E20F3437]
+	(No symbol) [0x00007FF7E2136BFF]
+	(No symbol) [0x00007FF7E211BE03]
+	(No symbol) [0x00007FF7E20F2984]
+	(No symbol) [0x00007FF7E20F1E30]
+	(No symbol) [0x00007FF7E20F2571]
+	Microsoft::Applications::Events::EventProperty::empty [0x00007FF7E24ABB04+1094964]
+	(No symbol) [0x00007FF7E22132B8]
+	Microsoft::Applications::Events::EventProperty::empty [0x00007FF7E24AAF43+1091955]
+	Microsoft::Applications::Events::EventProperty::empty [0x00007FF7E24AAAA9+1090777]
+	Microsoft::Applications::Events::ILogConfiguration::operator* [0x00007FF7E22B0CB1+461569]
+	Microsoft::Applications::Events::ILogConfiguration::operator* [0x00007FF7E22AC9D4+444452]
+	Microsoft::Applications::Events::ILogConfiguration::operator* [0x00007FF7E22ACB19+444777]
+	Microsoft::Applications::Events::ILogConfiguration::operator* [0x00007FF7E22A2196+401382]
+	BaseThreadInitThunk [0x00007FF9B6DB259D+29]
+	RtlUserThreadStart [0x00007FF9B858AF38+40]
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "f:\HocTap\Nam3ki1\kpw\final\sa.py", line 508, in <module>
+    post_data_cmt = extractComment(react_cmt_box)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "f:\HocTap\Nam3ki1\kpw\final\sa.py", line 419, in extractComment
+    if not check_moreCmt: 
+           ^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'check_moreCmt' where it is not associated with a value

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tải lên tệp CSV</title>
+    <link rel="stylesheet" href="../static/style2.css">
+</head>
+<body>
+    <form action="/analyze" method="post" enctype="multipart/form-data">
+        <h1>Web phân tích cảm xúc</h1>
+        <label for="file">Chọn tệp CSV:</label>
+        <input type="file" name="file" id="file" accept=".csv" required>
+        <button type="submit">Tải lên và phân tích</button>
+        <footer>Chỉ hỗ trợ tệp định dạng CSV</footer>
+    </form>
+</body>
+</html>
