@@ -605,7 +605,6 @@ khó nghĩ
 khó nói
 khó thấy
 khó tránh
-không
 không ai
 không bao giờ
 không bao lâu
@@ -1923,6 +1922,15 @@ yêu cầu
 ờ ờ
 ở
 ở lại
+ẻm
+k
+e
+ib
+a
+vs
+mn
+h
+v
 ở như
 ở nhờ
 ở năm
@@ -1940,3 +1948,7 @@ yêu cầu
 ừ ào
 ừ ừ
 ử
+bé
+No comment
+name
+content

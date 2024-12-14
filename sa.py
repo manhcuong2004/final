@@ -117,8 +117,8 @@ parsed_url = urlparse(url)
 path = parsed_url.path  # Lấy phần đường dẫn
 result = re.sub( r'[^\w]','_',path.split('/')[-1]) 
 
-path_normal = f'./post_facebook_{result}.csv'
-path_reel = f'./post_reel_{result}.csv'
+path_normal = f'./{result}/post_facebook_{result}.csv'
+path_reel = f'./{result}/post_reel_{result}.csv'
 
 
 def saveOrCreate(result_post_normal, result_post_reel):

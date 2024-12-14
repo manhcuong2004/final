@@ -6,7 +6,9 @@ import re
 from emot.emo_unicode import UNICODE_EMOJI, EMOTICONS_EMO
 from underthesea import word_tokenize
 import sys
+from datetime import datetime
 
+current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
 def get_device():
     return torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -23,11 +25,10 @@ def remove_emoji(text):
 def clean_text(text):
     text = text.lower()
     text = re.sub(r'[^\w\s]', '', text)
-    text = re.sub(r'\d+', ' <num> ', text)
-    text = re.sub(r'\s+', ' ', text).strip()
     text = re.sub(r"[!@#$\[\]()']", "", text)
-
-    # Load stopwords once and use set for faster lookup
+    text = re.sub(r'\d+', ' ', text)  
+    text = re.sub(r'\s+', ' ', text).strip()  
+    words = word_tokenize(text)  
     with open('vietnamese-stopwords.txt', "r", encoding="utf-8") as f:
         stopwords = set(f.read().split("\n"))
     

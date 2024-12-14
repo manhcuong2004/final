@@ -3,6 +3,9 @@ import subprocess
 import os
 from werkzeug.utils import secure_filename
 import pandas as pd
+import uuid
+from datetime import datetime
+unique_id = str(uuid.uuid4()) 
 
 app = Flask(__name__)
 
@@ -11,12 +14,9 @@ OUTPUT_FOLDER = 'outputs'
 ALLOWED_EXTENSIONS = {'csv'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Tạo thư mục nếu chưa tồn tại
 for folder in [UPLOAD_FOLDER, OUTPUT_FOLDER]:
     if not os.path.exists(folder):
         os.makedirs(folder)
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -47,6 +47,7 @@ def scrape():
                 yield f"data: {line.strip()}\n\n"
             process.stdout.close()
 
+            process.wait()
             if process.returncode != 0:
                 yield f"data: Error: {process.stderr.read()}\n\n"
             process.stderr.close()
@@ -56,12 +57,10 @@ def scrape():
 
     return Response(generate_output(), content_type='text/event-stream')
 
-# Trang chủ hiển thị form upload
 @app.route('/analyze-sentiment')
-def indexa():
+def analyze_sentiment():
     return render_template('upload.html')
 
-# Xử lý tải lên và phân tích tệp
 @app.route('/analyze', methods=['POST'])
 def analyze():
     if 'file' not in request.files:
@@ -73,30 +72,83 @@ def analyze():
         return "Không có tệp nào được chọn."
     
     if file and allowed_file(file.filename):
-        # Lưu file
         filename = secure_filename(file.filename)
         upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(upload_path)
 
-        # Gọi script phân tích
-        output_path = os.path.join(OUTPUT_FOLDER, 'output.csv')
+        unique_id = uuid.uuid4().hex  
+        output_path = os.path.join(OUTPUT_FOLDER, f'output_{unique_id}.csv')
+
         try:
             subprocess.run(['python', 'analyze.py', upload_path, output_path], check=True)
+            
             return redirect(url_for('result', result_path=output_path))
+        except subprocess.CalledProcessError as e:
+            return f"Đã xảy ra lỗi trong quá trình phân tích: {str(e)}", 500
+        except Exception as e:
+            return f"Đã xảy ra lỗi không xác định: {str(e)}", 500
+    
+    return "Tệp không hợp lệ.", 400
+
+@app.route('/ana-result', methods=['GET'])
+def result():
+    result_path = request.args.get('result_path')
+    
+    if not result_path or not os.path.exists(result_path):
+        return "Không tìm thấy kết quả phân tích.", 404
+    
+    try:
+        desired_columns = ['content', 'react_list', 'comment', 'prediction'] 
+        df = pd.read_csv(result_path, usecols=desired_columns)
+        
+        # Chuyển đổi DataFrame thành bảng HTML
+        table_html = df.to_html(index=False, classes='table table-striped')
+        
+        # Hiển thị kết quả
+        return render_template('result.html', result=table_html)
+    except Exception as e:
+        return f"Không thể đọc kết quả phân tích: {str(e)}", 500
+    
+    
+@app.route('/statistics')
+def statistics():
+    return render_template('upload-sta.html')
+
+@app.route('/statistics-result', methods=['POST'])
+def analyze_statistics():
+    if 'file' not in request.files:
+        return "Không có tệp nào được gửi."
+    
+    file = request.files['file']
+    
+    if file.filename == '':
+        return "Không có tệp nào được chọn."
+    
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(upload_path)
+        
+        try:
+            result = subprocess.run(
+                ['python', 'statistics.py', upload_path],
+                capture_output=True,
+                text=True,
+                encoding='utf-8',
+                errors='replace',
+                env={**os.environ, "PYTHONIOENCODING": "utf-8"}
+            )
+            
+            if result.returncode != 0:
+                return f"Đã xảy ra lỗi khi chạy thống kê: {result.stderr}"
+            
+            output = result.stdout
+            
+            return render_template('statistics.html', output=output)
         except Exception as e:
             return f"Đã xảy ra lỗi: {str(e)}"
     
     return "Tệp không hợp lệ."
-
-# Hiển thị kết quả phân tích
-@app.route('/result', methods=['GET'])
-def result():
-    result_path = request.args.get('result_path')
-    if not os.path.exists(result_path):
-        return "Không tìm thấy kết quả phân tích."
-    
-    df = pd.read_csv(result_path)
-    return render_template('result.html', result=df.to_html(index=False))
 
 if __name__ == '__main__':
     app.run(debug=True)
