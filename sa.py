@@ -67,8 +67,8 @@ login = find_element_with_fallback(driver, login_selectors)
 
 # usernameIN ="khoalolriot@gmail.com")
 # passwordIN = "Akhoa@6204 "
-username.send_keys("khoalolriot@gmail.com")
-password.send_keys("Akhoa@6204")
+username.send_keys(usernameIN)
+password.send_keys(passwordIN)
 login.click()
 # print("Đăng nhập thành công")
 # print("Đang cào.........")
@@ -117,8 +117,8 @@ parsed_url = urlparse(url)
 path = parsed_url.path  # Lấy phần đường dẫn
 result = re.sub( r'[^\w]','_',path.split('/')[-1]) 
 
-path_normal = f'./{result}/post_facebook_{result}.csv'
-path_reel = f'./{result}/post_reel_{result}.csv'
+path_normal = f'.scraped/{result}/post_facebook_{result}.csv'
+path_reel = f'.scraped/{result}/post_reel_{result}.csv'
 
 
 def saveOrCreate(result_post_normal, result_post_reel):

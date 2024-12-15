@@ -58,7 +58,7 @@
 
             eventSource.onmessage = (event) => {
                 outputDiv.innerHTML += event.data + '\n';
-                outputDiv.scrollTop = outputDiv.scrollHeight; // Cuộn xuống cuối
+                outputDiv.scrollTop = outputDiv.scrollHeight; 
             };
 
             eventSource.onerror = () => {
